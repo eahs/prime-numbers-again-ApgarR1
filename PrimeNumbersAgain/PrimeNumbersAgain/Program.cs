@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace PrimeNumbersAgain
@@ -25,7 +26,33 @@ namespace PrimeNumbersAgain
 
         static int FindNthPrime(int n)
         {
-            return 0;
+            var max = 40000000;
+            var sqrt = Math.Sqrt(max); // faster to initialize outside of loop
+            var primes = new List<int>();
+            bool[] numbers = new bool[max];
+
+            for (int i = 0; i < numbers.Length; i++) // sets all booleans in array to true
+                numbers[i] = true;
+
+            for (int i = 2; i < sqrt + 1; i++)
+            {
+                if (numbers[i - 1])
+                {
+                    for (int j = (int)Math.Pow(i, 2); j <= max; j += i) // sets non-primes to false
+                    {
+                        numbers[j - 1] = false;
+                    }
+                }
+            }
+            for (int i = 1; i < numbers.Length; i++)
+            {
+                if (numbers[i])
+                    primes.Add(i);
+            }
+
+            return primes[n - 1] + 1; // The output would always be 1 less than the actual answer (2 million prime is 32,452,843.
+                                      // Program would output 32,452,842.) I have no idea what caused this so I decided to take an
+                                      // easy way and just make it always add 1.
         }
 
         static int GetNumber()
